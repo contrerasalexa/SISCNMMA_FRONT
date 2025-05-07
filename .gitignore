@@ -1,0 +1,39 @@
+# Dependencias
+node_modules/
+
+# Salida del build
+dist/
+
+# Archivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs y editores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Railway
+railway.json
+
+# Archivos de lock (si no usas todos, ignora solo los que no uses)
+package-lock.json
+yarn.lock
+# (mantén `pnpm-lock.yaml` si usas pnpm)
+
+# Git
+.git/
