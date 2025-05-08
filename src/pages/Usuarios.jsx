@@ -21,9 +21,11 @@ const Usuarios = () => {
     fetchUsuarios();
   }, []);
 
+  const API = import.meta.env.VITE_API;
+
   const fetchUsuarios = () => {
     setIsLoading(true);
-    fetch("http://localhost:3000/api/usuarios")
+    fetch(`${API}/api/usuarios`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setUsuarios(data.usuarios);
@@ -35,7 +37,7 @@ const Usuarios = () => {
   const toggleEstatus = async (id, estatusActual) => {
     const nuevoEstatus = estatusActual === 1 ? 2 : 1;
     try {
-      const response = await fetch(`http://localhost:3000/api/usuarios/estatus/${id}`, {
+      const response = await fetch(`${API}/api/usuarios/estatus/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nuevoEstatus })
@@ -81,8 +83,8 @@ const Usuarios = () => {
     e.preventDefault();
   
     const url = usuarioEnEdicion
-      ? `http://localhost:3000/api/usuarios/${usuarioEnEdicion.id_usuario}`
-      : "http://localhost:3000/api/usuarios";
+    ? `${API}/api/usuarios/${usuarioEnEdicion.id_usuario}`
+    : `${API}/api/usuarios`;
   
     const method = usuarioEnEdicion ? "PUT" : "POST";
   
