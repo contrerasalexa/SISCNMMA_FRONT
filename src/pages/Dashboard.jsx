@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { 
-  User, 
-  FileText, 
-  LogOut, 
-  Settings, 
-  BarChart2, 
-  ClipboardList, 
-  Users, 
-  LineChart, 
-  Droplet, 
+import {
+  User,
+  FileText,
+  LogOut,
+  Settings,
+  BarChart2,
+  ClipboardList,
+  Users,
+  LineChart,
+  Droplet,
   CheckSquare
 } from "lucide-react";
 
@@ -35,11 +35,31 @@ const Dashboard = () => {
 
   const roleMenus = {
     1: [
-      { id: "users", title: "Usuarios del Sistema", icon: <Users className="w-6 h-6" />, color: "blue", description: "Gestiona accesos y perfiles del sistema", path: "/usuarios" },
-      { id: "stats", title: "Estadísticas", icon: <BarChart2 className="w-6 h-6" />, color: "indigo", description: "Visualiza métricas y datos de uso" },
-      { id: "logs", title: "Bitácoras", icon: <ClipboardList className="w-6 h-6" />, color: "red", description: "Auditoría y registros de uso" },
-      { id: "config", title: "Configuración", icon: <Settings className="w-6 h-6" />, color: "gray", description: "Ajustes y parámetros del sistema" }
-    ],
+      {
+        id: "atletas",
+        title: "Registrar Atletas",
+        icon: <Users className="w-6 h-6" />,
+        color: "blue",
+        description: "Registro de atletas con su información básica",
+        path: "/registrar-atleta"
+      },
+      {
+        id: "nutriologos",
+        title: "Registrar Nutriólogos",
+        icon: <User className="w-6 h-6" />,
+        color: "green",
+        description: "Registro de nutriólogos con cédula y perfil profesional",
+        path: "/registrar-nutriologo"
+      },
+      {
+        id: "usuarios",
+        title: "Crear Usuarios del Sistema",
+        icon: <Settings className="w-6 h-6" />,
+        color: "purple",
+        description: "Asignación de cuentas de acceso a atletas y nutriólogos",
+        path: "/usuarios"
+      }
+    ],    
     2: [
       { id: "patients", title: "Pacientes", icon: <Users className="w-6 h-6" />, color: "blue", description: "Consulta y seguimiento de pacientes" },
       { id: "plans", title: "Planes Alimenticios", icon: <CheckSquare className="w-6 h-6" />, color: "green", description: "Control y edición de planes nutricionales" },
@@ -49,7 +69,7 @@ const Dashboard = () => {
     3: [
       { id: "myPlan", title: "Mi Plan Nutricional", icon: <FileText className="w-6 h-6" />, color: "green", description: "Visualiza tus comidas y calorías" },
       { id: "myHydration", title: "Mi Hidratación", icon: <Droplet className="w-6 h-6" />, color: "blue", description: "Recomendaciones de hidratación" },
-      { id: "progress", title: "Mi Historial", icon: <LineChart className="w-6 h-6" />, color: "orange", description: "Formulario para contestar preguntas sobre mi historial", path: "/mi-historial"  },
+      { id: "progress", title: "Mi Historial", icon: <LineChart className="w-6 h-6" />, color: "orange", description: "Formulario para contestar preguntas sobre mi historial", path: "/mi-historial" },
       { id: "myProfile", title: "Mi Perfil", icon: <User className="w-6 h-6" />, color: "purple", description: "Actualiza tus datos personales" }
     ]
   };
@@ -104,11 +124,10 @@ const Dashboard = () => {
                 {menuItems.map((item) => (
                   <li key={item.id}>
                     <button
-                      className={`w-full flex items-center px-4 py-2 rounded-lg text-left ${
-                        activeMenu === item.id
+                      className={`w-full flex items-center px-4 py-2 rounded-lg text-left ${activeMenu === item.id
                           ? `bg-blue-600 text-white`
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                       onClick={() => setActiveMenu(item.id)}
                     >
                       {item.icon}
@@ -142,9 +161,8 @@ const Dashboard = () => {
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden cursor-pointer border border-gray-100 ${
-                  activeMenu === item.id ? "ring-2 ring-blue-500" : ""
-                }`}
+                className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden cursor-pointer border border-gray-100 ${activeMenu === item.id ? "ring-2 ring-blue-500" : ""
+                  }`}
                 onClick={() => {
                   if (item.path) {
                     navigate(item.path);
@@ -152,46 +170,44 @@ const Dashboard = () => {
                     setActiveMenu(item.id);
                   }
                 }}
-                
+
               >
                 <div
-                  className={`h-2 ${
-                    item.color === "blue"
+                  className={`h-2 ${item.color === "blue"
                       ? "bg-blue-500"
                       : item.color === "green"
-                      ? "bg-green-500"
-                      : item.color === "indigo"
-                      ? "bg-indigo-500"
-                      : item.color === "red"
-                      ? "bg-red-500"
-                      : item.color === "gray"
-                      ? "bg-gray-600"
-                      : item.color === "purple"
-                      ? "bg-purple-500"
-                      : item.color === "cyan"
-                      ? "bg-cyan-500"
-                      : "bg-orange-500"
-                  }`}
+                        ? "bg-green-500"
+                        : item.color === "indigo"
+                          ? "bg-indigo-500"
+                          : item.color === "red"
+                            ? "bg-red-500"
+                            : item.color === "gray"
+                              ? "bg-gray-600"
+                              : item.color === "purple"
+                                ? "bg-purple-500"
+                                : item.color === "cyan"
+                                  ? "bg-cyan-500"
+                                  : "bg-orange-500"
+                    }`}
                 ></div>
                 <div className="p-6">
                   <div
-                    className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${
-                      item.color === "blue"
+                    className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${item.color === "blue"
                         ? "bg-blue-100 text-blue-600"
                         : item.color === "green"
-                        ? "bg-green-100 text-green-600"
-                        : item.color === "indigo"
-                        ? "bg-indigo-100 text-indigo-600"
-                        : item.color === "red"
-                        ? "bg-red-100 text-red-600"
-                        : item.color === "gray"
-                        ? "bg-gray-100 text-gray-600"
-                        : item.color === "purple"
-                        ? "bg-purple-100 text-purple-600"
-                        : item.color === "cyan"
-                        ? "bg-cyan-100 text-cyan-600"
-                        : "bg-orange-100 text-orange-600"
-                    } mb-4`}
+                          ? "bg-green-100 text-green-600"
+                          : item.color === "indigo"
+                            ? "bg-indigo-100 text-indigo-600"
+                            : item.color === "red"
+                              ? "bg-red-100 text-red-600"
+                              : item.color === "gray"
+                                ? "bg-gray-100 text-gray-600"
+                                : item.color === "purple"
+                                  ? "bg-purple-100 text-purple-600"
+                                  : item.color === "cyan"
+                                    ? "bg-cyan-100 text-cyan-600"
+                                    : "bg-orange-100 text-orange-600"
+                      } mb-4`}
                   >
                     {item.icon}
                   </div>

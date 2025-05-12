@@ -8,20 +8,37 @@ const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [usuarioEnEdicion, setUsuarioEnEdicion] = useState(null);
+  const [atletasDisponibles, setAtletasDisponibles] = useState([]);
+  const [nutriologosDisponibles, setNutriologosDisponibles] = useState([]);
+
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre_usuario: "",
     email: "",
     password: "",
     rol: 1
   });
-  const [usuarioEnEdicion, setUsuarioEnEdicion] = useState(null);
+
   const navigate = useNavigate();
+  const API = import.meta.env.VITE_API;
 
   useEffect(() => {
     fetchUsuarios();
   }, []);
 
-  const API = import.meta.env.VITE_API;
+  useEffect(() => {
+    if (!usuarioEnEdicion) {
+      if (nuevoUsuario.rol === 2) {
+        fetch(`${API}/api/nutriologos/opciones`)
+          .then(res => res.json())
+          .then(data => setNutriologosDisponibles(data.nutriologos));
+      } else if (nuevoUsuario.rol === 3) {
+        fetch(`${API}/api/atletas/opciones`)
+          .then(res => res.json())
+          .then(data => setAtletasDisponibles(data.atletas));
+      }
+    }
+  }, [nuevoUsuario.rol]);
 
   const fetchUsuarios = () => {
     setIsLoading(true);
@@ -63,7 +80,8 @@ const Usuarios = () => {
       nombre_usuario: "",
       email: "",
       password: "",
-      rol: 1
+      rol: 1,
+      id: ""
     });
     setShowModal(true);
   };
@@ -73,48 +91,86 @@ const Usuarios = () => {
     setNuevoUsuario({
       nombre_usuario: usuario.nombre_usuario,
       email: usuario.email,
-      password: "", // Puedes dejarlo vacío para no mostrarlo
-      rol: usuario.rol
+      password: "",
+      rol: usuario.rol,
+      id: usuario.id_usuario
     });
     setShowModal(true);
+    if (data.success) {
+      let mensaje = "Usuario registrado correctamente.";
+      if (!usuarioEnEdicion && (nuevoUsuario.rol === 2 || nuevoUsuario.rol === 3)) {
+        mensaje += `\n\n📧 Correo: ${nuevoUsuario.email}\n🔑 Contraseña: ${nuevoUsuario.password}`;
+      }
+    
+      alert(mensaje);
+      fetchUsuarios();
+      setShowModal(false);
+      setNuevoUsuario({ nombre_usuario: "", email: "", password: "", rol: 1, id: "" });
+      setUsuarioEnEdicion(null);
+    }
+    
+  };
+
+  const generarPasswordDesdeFecha = (fecha) => {
+    const date = new Date(fecha);
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}${mm}${yyyy}`;
   };
 
   const handleGuardar = async (e) => {
     e.preventDefault();
-  
+    const payload = {
+      nombre_usuario: nuevoUsuario.nombre_usuario,
+      email: nuevoUsuario.email,
+      rol: nuevoUsuario.rol,
+      password: nuevoUsuario.password,
+      id: nuevoUsuario.id
+
+    };
+    if (nuevoUsuario.rol === 2 || nuevoUsuario.rol === 3) {
+      payload.id = nuevoUsuario.id;
+    }
     const url = usuarioEnEdicion
-    ? `${API}/api/usuarios/${usuarioEnEdicion.id_usuario}`
-    : `${API}/api/usuarios`;
-  
+      ? `${API}/api/usuarios/${usuarioEnEdicion.id_usuario}`
+      : `${API}/api/usuarios`;
+
     const method = usuarioEnEdicion ? "PUT" : "POST";
-  
-    // Si estamos editando y el password está vacío, no lo envíes
-    const payload = { ...nuevoUsuario };
+
     if (usuarioEnEdicion && !nuevoUsuario.password) {
       delete payload.password;
     }
-  
+
     try {
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
       if (data.success) {
+        let mensaje = "Usuario registrado correctamente.";
+        if (!usuarioEnEdicion && (nuevoUsuario.rol === 2 || nuevoUsuario.rol === 3)) {
+          mensaje += `\n\n📧 Correo: ${nuevoUsuario.email}\n🔑 Contraseña: ${nuevoUsuario.password}`;
+        }
+      
+        alert(mensaje);
+      
         fetchUsuarios();
         setShowModal(false);
-        setNuevoUsuario({ nombre_usuario: "", email: "", password: "", rol: 1 });
-        setUsuarioEnEdicion(null);
+        setNuevoUsuario({ nombre_usuario: "", email: "", password: "", rol: 1, id: "" });
+        setUsuarioEnEdicion(null);      
       } else {
         alert(data.error || "Error al guardar");
       }
     } catch (err) {
       console.error("Error al guardar usuario:", err);
     }
+
+    
   };
-  
 
   const getBadgeColor = (rol) => {
     switch (rol) {
@@ -131,6 +187,27 @@ const Usuarios = () => {
       default: return "Atleta";
     }
   };
+
+  const eliminarUsuario = async (id) => {
+    const confirm = window.confirm("¿Estás seguro de eliminar este usuario?");
+    if (!confirm) return;
+  
+    try {
+      const response = await fetch(`${API}/api/usuarios/${id}`, {
+        method: "DELETE"
+      });
+      const data = await response.json();
+  
+      if (data.success) {
+        fetchUsuarios(); // recargar lista
+      } else {
+        alert("Error al eliminar: " + data.error);
+      }
+    } catch (err) {
+      console.error("Error al eliminar usuario:", err);
+    }
+  };
+  
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -214,12 +291,22 @@ const Usuarios = () => {
                           </label>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <button
-                            className="text-blue-600 hover:underline"
-                            onClick={() => abrirModalEdicion(usuario)}
-                          >
-                            Editar
-                          </button>
+                          <div className="flex gap-3 justify-end">
+                            <button
+                              className="text-blue-600 hover:underline"
+                              onClick={() => abrirModalEdicion(usuario)}
+                            >
+                              Editar
+                            </button>
+                            <button
+                              className="text-red-600 hover:underline"
+                              onClick={() => eliminarUsuario(usuario.id_usuario)}
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+
+
                         </td>
                       </tr>
                     ))
@@ -238,32 +325,75 @@ const Usuarios = () => {
                 {usuarioEnEdicion ? "Editar Usuario" : "Registrar Nuevo Usuario"}
               </h2>
               <form onSubmit={handleGuardar} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Nombre completo"
-                  className="w-full border rounded px-4 py-2"
-                  value={nuevoUsuario.nombre_usuario}
-                  onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombre_usuario: e.target.value })}
-                  required
-                />
-                <input
-                  type="email"
-                  placeholder="Correo electrónico"
-                  className="w-full border rounded px-4 py-2"
-                  value={nuevoUsuario.email}
-                  onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
-                  required
-                />
-                {!usuarioEnEdicion && (
-                  <input
-                  type="password"
-                  placeholder={usuarioEnEdicion ? "Nueva contraseña (opcional)" : "Contraseña"}
-                  className="w-full border rounded px-4 py-2"
-                  value={nuevoUsuario.password}
-                  onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, password: e.target.value })}
-                />
-                
+                {nuevoUsuario.rol === 2 && !usuarioEnEdicion && (
+                  <select className="w-full border rounded px-4 py-2" onChange={(e) => {
+                    const selected = nutriologosDisponibles.find(n => n.id === parseInt(e.target.value));
+                    if (selected) {
+                      setNuevoUsuario({
+                        ...nuevoUsuario,
+                        id: selected.id,
+                        nombre_usuario: selected.nombre_completo,
+                        email: selected.email,
+                        password: generarPasswordDesdeFecha(selected.fecha_nacimiento)
+                      });
+                    }
+                  }}>
+                    <option value="">Selecciona un nutriólogo</option>
+                    {nutriologosDisponibles.map(n => (
+                      <option key={n.id} value={n.id}>{n.nombre_completo}</option>
+                    ))}
+                  </select>
                 )}
+
+                {nuevoUsuario.rol === 3 && !usuarioEnEdicion && (
+                  <select className="w-full border rounded px-4 py-2" onChange={(e) => {
+                    const selected = atletasDisponibles.find(a => a.id === parseInt(e.target.value));
+                    if (selected) {
+                      setNuevoUsuario({
+                        ...nuevoUsuario,
+                        id: selected.id,
+                        nombre_usuario: selected.nombre_completo,
+                        email: selected.email,
+                        password: generarPasswordDesdeFecha(selected.fecha_nacimiento)
+                      });
+                    }
+                  }}>
+                    <option value="">Selecciona un atleta</option>
+                    {atletasDisponibles.map(a => (
+                      <option key={a.id} value={a.id}>{a.nombre_completo}</option>
+                    ))}
+                  </select>
+                )}
+
+                {/* Campos manuales para Administrador o edición */}
+                {(nuevoUsuario.rol === 1 || usuarioEnEdicion) && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Nombre completo"
+                      className="w-full border rounded px-4 py-2"
+                      value={nuevoUsuario.nombre_usuario}
+                      onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombre_usuario: e.target.value })}
+                      required
+                    />
+                    <input
+                      type="email"
+                      placeholder="Correo electrónico"
+                      className="w-full border rounded px-4 py-2"
+                      value={nuevoUsuario.email}
+                      onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
+                      required
+                    />
+                    <input
+                      type="password"
+                      placeholder="Contraseña"
+                      className="w-full border rounded px-4 py-2"
+                      value={nuevoUsuario.password}
+                      onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, password: e.target.value })}
+                    />
+                  </>
+                )}
+
                 <select
                   className="w-full border rounded px-4 py-2"
                   value={nuevoUsuario.rol}
@@ -273,6 +403,7 @@ const Usuarios = () => {
                   <option value={2}>Nutriólogo</option>
                   <option value={3}>Atleta</option>
                 </select>
+
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
