@@ -58,8 +58,24 @@ const Dashboard = () => {
         color: "purple",
         description: "Asignación de cuentas de acceso a atletas y nutriólogos",
         path: "/usuarios"
+      },
+      {
+        id: "ver-nutriologos",
+        title: "Lista de Nutriólogos",
+        icon: <ClipboardList className="w-6 h-6" />,
+        color: "cyan",
+        description: "Visualiza todos los nutriólogos registrados",
+        path: "/nutriologos"
+      },
+      {
+        id: "ver-atletas",
+        title: "Lista de Atletas",
+        icon: <ClipboardList className="w-6 h-6" />,
+        color: "orange",
+        description: "Consulta de atletas en el sistema",
+        path: "/atletas"
       }
-    ],    
+    ],        
     2: [
       { id: "patients", title: "Pacientes", icon: <Users className="w-6 h-6" />, color: "blue", description: "Consulta y seguimiento de pacientes" },
       { id: "plans", title: "Planes Alimenticios", icon: <CheckSquare className="w-6 h-6" />, color: "green", description: "Control y edición de planes nutricionales" },
