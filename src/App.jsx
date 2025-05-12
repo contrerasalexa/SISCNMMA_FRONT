@@ -6,6 +6,8 @@ import Usuarios from "./pages/Usuarios";
 import MiHistorial from './pages/MiHistorial'
 import RegistrarAtleta from './pages/RegistrarAtleta';
 import RegistrarNutriologo from './pages/RegistrarNutriologo'
+import Nutriologos from './pages/Nutriologos';
+import Atletas from './pages/Atletas';
 /*import UserPanel from './pages/UserPanel'
 import PlanAlimenticio from './pages/PlanAlimenticio'
 import Hidratacion from './pages/Hidratacion'
@@ -20,6 +22,8 @@ export default function App() {
       <Route path="/mi-historial" element={<MiHistorial />} />
       <Route path="/registrar-atleta" element={<RegistrarAtleta />} />
       <Route path="/registrar-nutriologo" element={<RegistrarNutriologo />} />
+      <Route path="/nutriologos" element={<Nutriologos />} />
+      <Route path="/atletas" element={<Atletas />} />
       
     </Routes>
   )
