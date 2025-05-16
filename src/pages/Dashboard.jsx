@@ -77,9 +77,9 @@ const Dashboard = () => {
       }
     ],        
     2: [
-      { id: "patients", title: "Pacientes", icon: <Users className="w-6 h-6" />, color: "blue", description: "Consulta y seguimiento de pacientes" },
-      { id: "plans", title: "Planes Alimenticios", icon: <CheckSquare className="w-6 h-6" />, color: "green", description: "Control y edición de planes nutricionales" },
-      { id: "hydration", title: "Hidratación", icon: <Droplet className="w-6 h-6" />, color: "cyan", description: "Tasas de sudoración y recomendaciones" },
+      { id: "patients", title: "Pacientes", icon: <Users className="w-6 h-6" />, color: "blue", description: "Consulta y seguimiento de pacientes", path: "/atletas" },
+      { id: "plans", title: "Planes Alimenticios", icon: <CheckSquare className="w-6 h-6" />, color: "green", description: "Control y edición de planes nutricionales", path: "/planes" },
+      { id: "hydration", title: "Registrar Paciente", icon: <Droplet className="w-6 h-6" />, color: "cyan", description: "Registro de pacientes", path: "/registrar-atleta" },
       { id: "profile", title: "Mi Perfil", icon: <User className="w-6 h-6" />, color: "purple", description: "Gestión de perfil profesional" }
     ],
     3: [

@@ -5,6 +5,7 @@ const MiHistorial = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     // Datos del Atleta
     fecha_nacimiento: "",
@@ -93,12 +94,14 @@ const MiHistorial = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    if (submitted) return; // evita reenvío
+    setSubmitted(true);
+  
     try {
-      const response = await fetch("http://localhost:3000/api/historial", {
+      const response = await fetch(`${import.meta.env.VITE_API}/api/auth/historial`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           id_atleta: user?.id,
@@ -107,15 +110,11 @@ const MiHistorial = () => {
           fecha_nacimiento: formData.fecha_nacimiento,
           sexo: formData.sexo,
           id_deporte: formData.id_deporte
-
         }),
-
-
-
       });
+  
       const data = await response.json();
       if (data.success) {
-        // Mostrar notificación de éxito en lugar de alert
         showNotification("¡Formulario enviado exitosamente!", "success");
       } else {
         showNotification("Error al guardar: " + data.error, "error");
@@ -123,8 +122,11 @@ const MiHistorial = () => {
     } catch (err) {
       console.error(err);
       showNotification("Error al enviar el formulario", "error");
+    } finally {
+      setSubmitted(false); // permitir reenvío si ocurre error
     }
   };
+  
 
   // Función para mostrar notificaciones en la UI
   const [notification, setNotification] = useState({ message: "", type: "", show: false });
