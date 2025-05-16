@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrarAtleta() {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ export default function RegistrarAtleta() {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState(null);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDeportes();
@@ -105,6 +107,9 @@ export default function RegistrarAtleta() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+      <button onClick={() => navigate(-1)} className="text-blue-600 hover:underline mb-4">
+        ← Regresar
+      </button>
       <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Registro de Atleta</h2>
       {notification && (
         <div className={`mb-4 p-3 rounded-md flex items-center ${

@@ -8,11 +8,9 @@ import RegistrarAtleta from './pages/RegistrarAtleta';
 import RegistrarNutriologo from './pages/RegistrarNutriologo'
 import Nutriologos from './pages/Nutriologos';
 import Atletas from './pages/Atletas';
-/*import UserPanel from './pages/UserPanel'
-import PlanAlimenticio from './pages/PlanAlimenticio'
-import Hidratacion from './pages/Hidratacion'
-import TasaSudoracion from './pages/TasaSudoracion'*/
-
+import PlanesAlimenticios from './pages/PlanesAlimenticios'
+import NuevoPlan from './pages/NuevoPlan';
+import PlanDetalle from './pages/PlanDetalle';
 export default function App() {
   return (
     <Routes>
@@ -24,6 +22,9 @@ export default function App() {
       <Route path="/registrar-nutriologo" element={<RegistrarNutriologo />} />
       <Route path="/nutriologos" element={<Nutriologos />} />
       <Route path="/atletas" element={<Atletas />} />
+      <Route path="/planes" element={<PlanesAlimenticios />} />
+      <Route path="/planes/nuevo" element={<NuevoPlan />} />
+      <Route path="/planes/:id" element={<PlanDetalle />} />
       
     </Routes>
   )
