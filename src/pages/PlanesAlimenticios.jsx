@@ -15,7 +15,7 @@ const PlanesAlimenticios = () => {
     const fetchPlanes = async () => {
       try {
         const url =
-          user.rol === 2
+          user.rol === 2 
             ? `${API}/api/planes/nutriologo/${user.id}`
             : `${API}/api/planes/atleta/${user.id}`;
 
@@ -43,7 +43,7 @@ const PlanesAlimenticios = () => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-800 flex items-center">
             <FileText className="w-8 h-8 mr-2 text-green-600" />
-            {user.rol === 2 ? "Planes Alimenticios" : "Mis Planes"}
+            {user.rol === 2 || user.rol === 3 ? "Planes Alimenticios" : "Mis Planes"}
           </h1>
           {user.rol === 2 && (
             <button
