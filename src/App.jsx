@@ -11,6 +11,9 @@ import Atletas from './pages/Atletas';
 import PlanesAlimenticios from './pages/PlanesAlimenticios'
 import NuevoPlan from './pages/NuevoPlan';
 import PlanDetalle from './pages/PlanDetalle';
+import RegistrarSudoracion from './pages/RegistrarSudoracion';
+import HistorialSudoracion from './pages/HistorialSudoracion';
+
 export default function App() {
   return (
     <Routes>
@@ -25,6 +28,8 @@ export default function App() {
       <Route path="/planes" element={<PlanesAlimenticios />} />
       <Route path="/planes/nuevo" element={<NuevoPlan />} />
       <Route path="/planes/:id" element={<PlanDetalle />} />
+      <Route path="/registrar-sudoracion" element={<RegistrarSudoracion />} />
+      <Route path="/historial-sudoracion" element={<HistorialSudoracion />} />
       
     </Routes>
   )

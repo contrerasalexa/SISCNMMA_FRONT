@@ -84,9 +84,9 @@ const Dashboard = () => {
     ],
     3: [
       { id: "myPlan", title: "Mi Plan Nutricional", icon: <FileText className="w-6 h-6" />, color: "green", description: "Visualiza tus comidas y calorías", path: "/planes"},
-      { id: "myHydration", title: "Mi Hidratación", icon: <Droplet className="w-6 h-6" />, color: "blue", description: "Recomendaciones de hidratación" },
+      { id: "myHydration", title: "Tasa de Sudoración", icon: <Droplet className="w-6 h-6" />, color: "blue", description: "Tasa de sudoración acorde al entrenamiento", path: "/registrar-sudoracion" },
       { id: "progress", title: "Mi Historial", icon: <LineChart className="w-6 h-6" />, color: "orange", description: "Formulario para contestar preguntas sobre mi historial", path: "/mi-historial" },
-      { id: "myProfile", title: "Mi Perfil", icon: <User className="w-6 h-6" />, color: "purple", description: "Actualiza tus datos personales" }
+      { id: "myProfile", title: "Mi Tasa de Sudoración", icon: <User className="w-6 h-6" />, color: "purple", description: "Hisotrial de la tasa de sudoriación", path: "/historial-sudoracion" }
     ]
   };
 
